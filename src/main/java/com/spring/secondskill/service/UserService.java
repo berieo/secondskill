@@ -18,14 +18,10 @@ public class UserService {
 
     @Transactional
     public boolean tx(){
-        User u1 = new User();
-        u1.setId(2);
-        u1.setName("222");
+        User u1 = new User(2, "222");
         userDao.insert(u1);
 
-        User u2 = new User();
-        u2.setId(3);
-        u2.setName("333");
+        User u2 = new User(3, "333");
         userDao.insert(u2);
 
         return true;

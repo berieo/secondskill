@@ -2,6 +2,7 @@ package com.spring.secondskill.controller;
 
 import com.spring.secondskill.domain.User;
 import com.spring.secondskill.redis.RedisService;
+import com.spring.secondskill.redis.UserKey;
 import com.spring.secondskill.result.CodeMsg;
 import com.spring.secondskill.result.Result;
 import com.spring.secondskill.service.UserService;
@@ -32,6 +33,9 @@ public class SampleController {
         return "hello";
     }
 
+    /*
+        从Mysql拿数据
+     */
     @RequestMapping("/db/get")
     @ResponseBody
     public Result<User> dbget(){
@@ -40,6 +44,9 @@ public class SampleController {
         return Result.success(user);
     }
 
+    /*
+        往Mysql插入数据
+     */
     @RequestMapping("/db/tx")
     @ResponseBody
     public Result<Boolean> dbTx(){
@@ -47,21 +54,63 @@ public class SampleController {
         return Result.success(true);
     }
 
+    /*
+        Redis get操作
+     */
     @RequestMapping("/redis/get")
     @ResponseBody
-    public Result<String> redisget(){
-        String v1 = redisService.get("key1", String.class);
-        return Result.success(v1);
+    public Result<User> redisget(){
+        User user = redisService.get(UserKey.getById,""+1, User.class);
+        return Result.success(user);
     }
 
+    /*
+        Redis set操作
+     */
     @RequestMapping("/redis/set")
     @ResponseBody
     public Result<Boolean> redisSet() {
-        User user  = new User();
-        user.setId(1);
-        user.setName("111");
-        boolean v1 = redisService.set("key2", "222");//UserKey:id1
+        User user  = new User(3, "333");
+
+        boolean v1 = redisService.set(UserKey.getById, ""+1, "222");//UserKey:id1
         return Result.success(v1);
     }
+
+    /*
+       Redis exist操作
+    */
+    @RequestMapping("/redis/exist")
+    @ResponseBody
+    public Result<Boolean> redisExist() {
+        User user  = new User(3, "333");
+
+        boolean v1 = redisService.exist(UserKey.getById, ""+2);//UserKey:id1
+        return Result.success(v1);
+    }
+
+    /*
+        Redis incr操作
+    */
+    @RequestMapping("/redis/incr")
+    @ResponseBody
+    public Result<Long> redisIncr() {
+        User user  = new User(3, "333");
+
+        Long v1 = redisService.incr(UserKey.getById, ""+1);//UserKey:id1
+        return Result.success(v1);
+    }
+
+    /*
+        Redis decr操作
+    */
+    @RequestMapping("/redis/decr")
+    @ResponseBody
+    public Result<Long> redisDecr() {
+        User user  = new User(3, "333");
+
+        Long v1 = redisService.decr(UserKey.getById, ""+1);//UserKey:id1
+        return Result.success(v1);
+    }
+
 
 }
