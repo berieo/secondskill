@@ -62,10 +62,11 @@
             <artifactId>jedis</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.38</version>
+            <version>1.2.75</version>
         </dependency>
 
         <dependency>

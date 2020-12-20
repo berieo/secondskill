@@ -49,9 +49,19 @@ public class SampleController {
 
     @RequestMapping("/redis/get")
     @ResponseBody
-    public Result<Boolean> redisget(){
-        redisService.get("1", User.class);
-        return Result.success(true);
+    public Result<String> redisget(){
+        String v1 = redisService.get("key1", String.class);
+        return Result.success(v1);
+    }
+
+    @RequestMapping("/redis/set")
+    @ResponseBody
+    public Result<Boolean> redisSet() {
+        User user  = new User();
+        user.setId(1);
+        user.setName("111");
+        boolean v1 = redisService.set("key2", "222");//UserKey:id1
+        return Result.success(v1);
     }
 
 }

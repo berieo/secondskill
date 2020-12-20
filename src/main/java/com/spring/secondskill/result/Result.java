@@ -2,6 +2,12 @@ package com.spring.secondskill.result;
 
 public class Result<T> {
 
+    /**
+     *  封装了一个结果
+     *  code，msg和data
+     *  返回整个对象
+     * */
+
     private int code;
     private String msg;
     private T data;
