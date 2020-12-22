@@ -15,13 +15,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.thymeleaf.util.StringUtils;
-
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/login")
 public class LoginController {
 
+    /*
+        在日志中打印对象信息
+     */
     private static Logger log = LoggerFactory.getLogger(LoginController.class);
 
     @Autowired
@@ -43,7 +46,7 @@ public class LoginController {
      */
     @RequestMapping("/do_login")
     @ResponseBody
-    public Result<Boolean> doLogin(@Valid LoginVo loginVo){
+    public Result<Boolean> doLogin(HttpServletResponse httpServletResponse, @Valid LoginVo loginVo){
         log.info(loginVo.toString());
 //        String mobile = loginVo.getMobile();
 //        String passInput = loginVo.getPassword();
@@ -63,7 +66,7 @@ public class LoginController {
         /*
             登录
          */
-        secondsKillService.login(loginVo);
+        secondsKillService.login(httpServletResponse, loginVo);
         return Result.success(true);
     }
 }

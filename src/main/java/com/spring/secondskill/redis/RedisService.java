@@ -40,6 +40,10 @@ public class RedisService {
         }
     }
 
+    /*
+        Set传的是前缀+key值+对象
+        对象需要用beanToString转换为字符串
+    */
     public <T> boolean set(KeyPrefix keyPrefix, String key, T value){
         Jedis jedis = null;
         try{

@@ -16,14 +16,21 @@ import java.util.List;
 
 @ControllerAdvice
 @ResponseBody
-public class GlobleExceptionHandler {
+public class GlobalExceptionHandler {
 
+    /*
+        @ControllerAdvice 处理所有异常
+     */
     @ExceptionHandler(value = Exception.class)
     public Result<String> exceptionHandler(HttpServletRequest httpServletRequest, Exception e){
-        if(e instanceof BindException){
+        System.out.print("ExceptionHandler");
+        if(e instanceof GlobalException){
+            GlobalException ge = (GlobalException) e;
+            return Result.error(ge.getCm());
+        }else if(e instanceof BindException){
             /*
                 exception有多个
-             */
+            */
             BindException ex = (BindException) e;
             List<ObjectError> erorrs = ex.getAllErrors();
             ObjectError error = erorrs.get(0);
