@@ -1,10 +1,12 @@
 package com.spring.secondskill.service;
 
 import com.spring.secondskill.dao.UserDao;
+import com.spring.secondskill.domain.SecondsKillUser;
 import com.spring.secondskill.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.util.StringUtils;
 
 @Service
 public class UserService {
@@ -26,4 +28,6 @@ public class UserService {
 
         return true;
     }
+
+
 }

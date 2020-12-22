@@ -11,6 +11,7 @@ import com.spring.secondskill.util.UUIDUtil;
 import com.spring.secondskill.vo.LoginVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.util.StringUtils;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 @Service
 public class SecondsKillService implements SecondsKillDao {
 
-    private static final String COOKIE_NAME_TOKEN = "token";
+    public static final String COOKIE_NAME_TOKEN = "token";
 
     @Autowired
     SecondsKillDao secondskillDao;
@@ -30,6 +31,18 @@ public class SecondsKillService implements SecondsKillDao {
     @Override
     public SecondsKillUser getById(long id) {
         return secondskillDao.getById(id);
+    }
+
+    public SecondsKillUser getByToken(HttpServletResponse httpServletResponse, String token) {
+        if(StringUtils.isEmpty(token)){
+            return null;
+        }
+        SecondsKillUser secondsKillUser = redisService.get(SecondsKillUserKey.token, token, SecondsKillUser.class);
+        //延长有效期
+        if(secondsKillUser != null){
+            addCookie(httpServletResponse, secondsKillUser);
+        }
+        return secondsKillUser;
     }
 
     public  boolean login(HttpServletResponse httpServletResponse, LoginVo loginVo){
@@ -53,9 +66,17 @@ public class SecondsKillService implements SecondsKillDao {
             throw new GlobalException(CodeMsg.PASSWORD_ERROR);
         }
 
+        addCookie(httpServletResponse, secondsKillUser);
+        return true;
+    }
+
+    private void addCookie(HttpServletResponse httpServletResponse,SecondsKillUser secondsKillUser){
         //生成rookie
         String token = UUIDUtil.uuid();
 
+        /*
+            token保存到redis中
+         */
         redisService.set(SecondsKillUserKey.token, token, secondsKillUser);
         Cookie cookie = new Cookie(COOKIE_NAME_TOKEN, token);
         cookie.setMaxAge(SecondsKillUserKey.token.expireSeconds());
@@ -64,9 +85,9 @@ public class SecondsKillService implements SecondsKillDao {
          */
         cookie.setPath("/");
         /*
-            cookie加入到响应中去
+            cookie加入到Response中去
          */
+        System.out.println(token);
         httpServletResponse.addCookie(cookie);
-        return true;
     }
 }

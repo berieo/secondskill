@@ -1,5 +1,6 @@
 package com.spring.secondskill.controller;
 
+import com.spring.secondskill.domain.SecondsKillUser;
 import com.spring.secondskill.domain.User;
 import com.spring.secondskill.redis.RedisService;
 import com.spring.secondskill.result.CodeMsg;
@@ -12,11 +13,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.thymeleaf.util.StringUtils;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/login")
@@ -38,6 +43,7 @@ public class LoginController {
 
     @RequestMapping("/to_login")
     public String toLogin(){
+
         return "login";
     }
 
@@ -48,21 +54,6 @@ public class LoginController {
     @ResponseBody
     public Result<Boolean> doLogin(HttpServletResponse httpServletResponse, @Valid LoginVo loginVo){
         log.info(loginVo.toString());
-//        String mobile = loginVo.getMobile();
-//        String passInput = loginVo.getPassword();
-//        /*
-//            判断是否位空
-//            判断电话号码是否正确
-//         */
-//        if(StringUtils.isEmpty(passInput)){
-//            Result.error(CodeMsg.PASSWORD_EMPTY);
-//        }
-//        if(StringUtils.isEmpty(mobile)){
-//            Result.error(CodeMsg.MOBILE_EMPTY);
-//        }
-//        if(!ValidatorUtil.isMobile(loginVo.getMobile())){
-//            Result.error(CodeMsg.MOBILE_ERROR);
-//        }
         /*
             登录
          */

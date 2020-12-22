@@ -58,7 +58,7 @@ public class RedisService {
                 jedis.set(realKey, str);
             }else{
                 //先set再设置expireSeconds
-                jedis.setex(realKey, seconds, (String) value);
+                jedis.setex(realKey, seconds, str);
             }
             return true;
         }finally {
