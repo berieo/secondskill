@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.thymeleaf.util.StringUtils;
 
+import javax.validation.Valid;
+
 @Controller
 @RequestMapping("/login")
 public class LoginController {
@@ -41,24 +43,23 @@ public class LoginController {
      */
     @RequestMapping("/do_login")
     @ResponseBody
-    public Result<Boolean> doLogin(LoginVo loginVo){
+    public Result<Boolean> doLogin(@Valid LoginVo loginVo){
         log.info(loginVo.toString());
-        String mobile = loginVo.getMobile();
-        String passInput = loginVo.getPassword();
-        /*
-            判断是否位空
-            判断电话号码是否正确
-         */
-        if(StringUtils.isEmpty(passInput)){
-            Result.error(CodeMsg.PASSWORD_EMPTY);
-        }
-        if(StringUtils.isEmpty(mobile)){
-            Result.error(CodeMsg.MOBILE_EMPTY);
-        }
-        if(!ValidatorUtil.isMobile(loginVo.getMobile())){
-            Result.error(CodeMsg.MOBILE_ERROR);
-        }
-
+//        String mobile = loginVo.getMobile();
+//        String passInput = loginVo.getPassword();
+//        /*
+//            判断是否位空
+//            判断电话号码是否正确
+//         */
+//        if(StringUtils.isEmpty(passInput)){
+//            Result.error(CodeMsg.PASSWORD_EMPTY);
+//        }
+//        if(StringUtils.isEmpty(mobile)){
+//            Result.error(CodeMsg.MOBILE_EMPTY);
+//        }
+//        if(!ValidatorUtil.isMobile(loginVo.getMobile())){
+//            Result.error(CodeMsg.MOBILE_ERROR);
+//        }
         /*
             登录
          */
@@ -69,8 +70,4 @@ public class LoginController {
             return Result.error(cm);
         }
     }
-
-
-
-
 }
