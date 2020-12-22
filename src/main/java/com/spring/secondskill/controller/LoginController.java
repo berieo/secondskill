@@ -63,11 +63,7 @@ public class LoginController {
         /*
             登录
          */
-        CodeMsg cm = secondsKillService.login(loginVo);
-        if(cm.getCode() == 0){
-            return Result.success(true);
-        }else{
-            return Result.error(cm);
-        }
+        secondsKillService.login(loginVo);
+        return Result.success(true);
     }
 }
