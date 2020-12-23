@@ -76,6 +76,7 @@ public class SecondsKillService implements SecondsKillDao {
 
         /*
             token保存到redis中
+            secondsKillUser在前端装配上
          */
         redisService.set(SecondsKillUserKey.token, token, secondsKillUser);
         Cookie cookie = new Cookie(COOKIE_NAME_TOKEN, token);

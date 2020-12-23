@@ -35,18 +35,7 @@ public class GoodsController {
 
     @RequestMapping("/to_list")
     public String toLogin(
-            Model model,
-            HttpServletResponse httpServletResponse,
-            @CookieValue(value=SecondsKillService.COOKIE_NAME_TOKEN, required = false) String cookieToken,
-            @RequestParam(value = SecondsKillService.COOKIE_NAME_TOKEN, required = false) String paramToken){
-        /*
-            在请求参数中或在cookie中
-         */
-        if(cookieToken == null && paramToken == null){
-            return "login";
-        }
-        String token = StringUtils.isEmpty(paramToken) ? cookieToken : paramToken;
-        SecondsKillUser secondsKillUser = secondsKillService.getByToken(httpServletResponse, token);
+            Model model, SecondsKillUser secondsKillUser){
         model.addAttribute("user", secondsKillUser);
         return "goods_list";
     }
