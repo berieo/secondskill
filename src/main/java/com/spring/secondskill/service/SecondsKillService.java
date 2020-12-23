@@ -16,6 +16,7 @@ import org.thymeleaf.util.StringUtils;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.UUID;
 
 @Service
 public class SecondsKillService implements SecondsKillDao {
@@ -40,7 +41,7 @@ public class SecondsKillService implements SecondsKillDao {
         SecondsKillUser secondsKillUser = redisService.get(SecondsKillUserKey.token, token, SecondsKillUser.class);
         //延长有效期
         if(secondsKillUser != null){
-            addCookie(httpServletResponse, secondsKillUser);
+            addCookie(httpServletResponse, token, secondsKillUser);
         }
         return secondsKillUser;
     }
@@ -65,15 +66,12 @@ public class SecondsKillService implements SecondsKillDao {
         if(!clacPass.equals(dbPass)){
             throw new GlobalException(CodeMsg.PASSWORD_ERROR);
         }
-
-        addCookie(httpServletResponse, secondsKillUser);
+        String token = UUIDUtil.uuid();
+        addCookie(httpServletResponse, token, secondsKillUser);
         return true;
     }
 
-    private void addCookie(HttpServletResponse httpServletResponse,SecondsKillUser secondsKillUser){
-        //生成rookie
-        String token = UUIDUtil.uuid();
-
+    private void addCookie(HttpServletResponse httpServletResponse,String token, SecondsKillUser secondsKillUser){
         /*
             token保存到redis中
             secondsKillUser在前端装配上
