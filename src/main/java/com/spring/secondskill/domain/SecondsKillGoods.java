@@ -6,9 +6,19 @@ import java.util.Date;
 public class SecondsKillGoods {
     private Long id;
     private Long goodsId;
+    private Double secondsKillPrice;
     private Integer stockCount;
     private Date startDate;
     private Date endDate;
+
+    public double getSecondsKillPrice() {
+        return secondsKillPrice;
+    }
+
+    public void setSecondsKillPrice(double secondsKillPrice) {
+        this.secondsKillPrice = secondsKillPrice;
+    }
+
     public Long getId() {
         return id;
     }
