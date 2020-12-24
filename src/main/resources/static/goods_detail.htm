@@ -65,7 +65,8 @@
         		<div class="form-inline">
 		        	<img id="verifyCodeImg" width="80" height="32"  style="display:none" onclick="refreshVerifyCode()"/>
 		        	<input id="verifyCode"  class="form-control" style="display:none"/>
-		        	<button class="btn btn-primary" type="button" id="buyButton"onclick="getMiaoshaPath()">立即秒杀</button>
+<!--                    mark-->
+		        	<button class="btn btn-primary" type="button" id="buyButton"onclick="getSecondsKillPath()">立即秒杀</button>
         		</div>
         	</div>
         	<input type="hidden" name="goodsId"  id="goodsId" />
@@ -88,11 +89,12 @@
 </body>
 <script>
 
-function getMiaoshaPath(){
+function getSecondsKillPath(){
 	var goodsId = $("#goodsId").val();
 	g_showLoading();
 	$.ajax({
-		url:"/miaosha/path",
+        // mark
+		url:"/secondskill/path",
 		type:"GET",
 		data:{
 			goodsId:goodsId,
@@ -101,7 +103,8 @@ function getMiaoshaPath(){
 		success:function(data){
 			if(data.code == 0){
 				var path = data.data;
-				doMiaosha(path);
+				// mark
+				doSecondsKill(path);
 			}else{
 				layer.msg(data.msg);
 			}
@@ -112,10 +115,10 @@ function getMiaoshaPath(){
 	});
 }
 
-function getMiaoshaResult(goodsId){
+function getSecondsKillResult(goodsId){
 	g_showLoading();
 	$.ajax({
-		url:"/miaosha/result",
+		url:"/secon/result",
 		type:"GET",
 		data:{
 			goodsId:$("#goodsId").val(),
@@ -127,7 +130,8 @@ function getMiaoshaResult(goodsId){
 					layer.msg("对不起，秒杀失败");
 				}else if(result == 0){//继续轮询
 					setTimeout(function(){
-						getMiaoshaResult(goodsId);
+					    // mark
+						getSecondsKillResult(goodsId);
 					}, 200);
 				}else{
 					layer.confirm("恭喜你，秒杀成功！查看订单？", {btn:["确定","取消"]},
@@ -147,10 +151,11 @@ function getMiaoshaResult(goodsId){
 		}
 	});
 }
-
-function doMiaosha(path){
+// mark
+function doSecondsKill(path){
 	$.ajax({
-		url:"/miaosha/"+path+"/do_miaosha",
+        // mark
+		url:"/secondskill/"+path+"/do_secondskill",
 		type:"POST",
 		data:{
 			goodsId:$("#goodsId").val()
@@ -158,7 +163,8 @@ function doMiaosha(path){
 		success:function(data){
 			if(data.code == 0){
 				//window.location.href="/order_detail.htm?orderId="+data.data.id;
-				getMiaoshaResult($("#goodsId").val());
+				// mark
+                getSecondsKillResult($("#goodsId").val());
 			}else{
 				layer.msg(data.msg);
 			}
@@ -171,7 +177,8 @@ function doMiaosha(path){
 }
 
 function render(detail){
-	var miaoshaStatus = detail.miaoshaStatus;
+    //Mark
+	var secondsKillStatus = detail.secondsKillStatus;
 	var  remainSeconds = detail.remainSeconds;
 	var goods = detail.goods;
 	var user = detail.user;
@@ -197,7 +204,7 @@ $(function(){
 function getDetail(){
 	var goodsId = g_getQueryString("goodsId");
 	$.ajax({
-		url:"/goods/detail/"+goodsId,
+		url:"/goods/to_detail/"+goodsId,
 		type:"GET",
 		success:function(data){
 			if(data.code == 0){
@@ -217,7 +224,8 @@ function countDown(){
 	var timeout;
 	if(remainSeconds > 0){//秒杀还没开始，倒计时
 	   $("#buyButton").attr("disabled", true);
-	   $("#miaoshaTip").html("秒杀倒计时："+remainSeconds+"秒");
+	   // mark
+	   $("#secondsKillTip").html("秒杀倒计时："+remainSeconds+"秒");
 		timeout = setTimeout(function(){
 			$("#countDown").text(remainSeconds - 1);
 			$("#remainSeconds").val(remainSeconds - 1);
@@ -228,19 +236,23 @@ function countDown(){
 		if(timeout){
 			clearTimeout(timeout);
 		}
-		$("#miaoshaTip").html("秒杀进行中");
-		$("#verifyCodeImg").attr("src", "/miaosha/verifyCode?goodsId="+$("#goodsId").val());
+		// mark
+		$("#secondsKilTip").html("秒杀进行中");
+		// mark
+		$("#verifyCodeImg").attr("src", "/secondskill/verifyCode?goodsId="+$("#goodsId").val());
 		$("#verifyCodeImg").show();
 		$("#verifyCode").show();
 	}else{//秒杀已经结束
 		$("#buyButton").attr("disabled", true);
-		$("#miaoshaTip").html("秒杀已经结束");
+		// mark
+		$("#secondsKillTip").html("秒杀已经结束");
 		$("#verifyCodeImg").hide();
 		$("#verifyCode").hide();
 	}
 }
 function refreshVerifyCode(){
-	$("#verifyCodeImg").attr("src", "/miaosha/verifyCode?goodsId="+$("#goodsId").val()+"&timestamp="+new Date().getTime());
+    // mark
+	$("#verifyCodeImg").attr("src", "/secondskill/verifyCode?goodsId="+$("#goodsId").val()+"&timestamp="+new Date().getTime());
 }
 </script>
 </html>
