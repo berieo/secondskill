@@ -1,7 +1,6 @@
 package com.spring.secondskill.config;
 
-import com.spring.secondskill.domain.SecondsKillUser;
-import com.spring.secondskill.service.SecondsKillService;
+import com.spring.secondskill.service.SecondsKillUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 
 
     @Autowired
-    SecondsKillService secondsKillService;
+    SecondsKillUserService secondsKillUserService;
 
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
@@ -40,13 +39,13 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         HttpServletRequest httpServletRequest = nativeWebRequest.getNativeRequest(HttpServletRequest.class);
         HttpServletResponse httpServletResponse = nativeWebRequest.getNativeResponse(HttpServletResponse.class);
 
-        String paramToken = httpServletRequest.getParameter(SecondsKillService.COOKIE_NAME_TOKEN);
-        String cookieToken = getCookieValue(httpServletRequest, SecondsKillService.COOKIE_NAME_TOKEN);
+        String paramToken = httpServletRequest.getParameter(SecondsKillUserService.COOKIE_NAME_TOKEN);
+        String cookieToken = getCookieValue(httpServletRequest, SecondsKillUserService.COOKIE_NAME_TOKEN);
         if(StringUtils.isEmpty(paramToken) && StringUtils.isEmpty(cookieToken)){
             return null;
         }
         String token = StringUtils.isEmpty(paramToken) ? cookieToken : paramToken;
-        return secondsKillService.getByToken(httpServletResponse, token);
+        return secondsKillUserService.getByToken(httpServletResponse, token);
     }
 
     private String getCookieValue(HttpServletRequest httpServletRequest, String cookieName){

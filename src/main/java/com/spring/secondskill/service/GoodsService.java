@@ -1,6 +1,7 @@
 package com.spring.secondskill.service;
 
 import com.spring.secondskill.dao.GoodsDao;
+import com.spring.secondskill.domain.Goods;
 import com.spring.secondskill.domain.SecondsKillGoods;
 import com.spring.secondskill.vo.GoodsVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +25,21 @@ public class GoodsService {
         return goodsDao.getGoodsVoByGoodsId(goodsId);
     }
 
-    public boolean reduceStock(GoodsVo goods) {
+//    NEW
+//    public boolean reduceStock(GoodsVo goodsVo) {
+//        SecondsKillGoods secondsKillGoods = new SecondsKillGoods();
+//        secondsKillGoods.setGoodsId(goodsVo.getId());
+//        int ret = goodsDao.reduceStock(secondsKillGoods);
+//        return ret > 0;
+//    }
+
+//    OLD
+    public void reduceStock(GoodsVo goodsVo){
         SecondsKillGoods secondsKillGoods = new SecondsKillGoods();
-        secondsKillGoods.setGoodsId(goods.getId());
-        int ret = goodsDao.reduceStock(secondsKillGoods);
-        return ret > 0;
+        secondsKillGoods.setGoodsId(goodsVo.getId());
+        goodsDao.reduceStock(secondsKillGoods);
     }
+
 
     public void resetStock(List<GoodsVo> goodsList) {
         for(GoodsVo goods : goodsList ) {

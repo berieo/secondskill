@@ -3,7 +3,7 @@ package com.spring.secondskill.controller;
 import com.spring.secondskill.domain.SecondsKillUser;
 import com.spring.secondskill.redis.RedisService;
 import com.spring.secondskill.service.GoodsService;
-import com.spring.secondskill.service.SecondsKillService;
+import com.spring.secondskill.service.SecondsKillUserService;
 import com.spring.secondskill.service.UserService;
 import com.spring.secondskill.vo.GoodsVo;
 import org.slf4j.Logger;
@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.thymeleaf.util.StringUtils;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -35,7 +32,7 @@ public class GoodsController {
     GoodsService goodsService;
 
     @Autowired
-    SecondsKillService secondsKillService;
+    SecondsKillUserService secondsKillUserService;
 
     @RequestMapping("/to_list")
     public String toLogin(Model model, SecondsKillUser secondsKillUser){
