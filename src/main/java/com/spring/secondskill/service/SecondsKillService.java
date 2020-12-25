@@ -86,7 +86,6 @@ public class SecondsKillService implements SecondsKillDao {
         /*
             cookie加入到Response中去
          */
-        System.out.println(token);
         httpServletResponse.addCookie(cookie);
     }
 }

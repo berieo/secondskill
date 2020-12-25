@@ -55,7 +55,6 @@ public class GoodsController {
     @RequestMapping("/to_detail/{goodsId}")
     public String toDetail(Model model, SecondsKillUser secondsKillUser, @PathVariable("goodsId")long goodsId){
         model.addAttribute("user", secondsKillUser);
-        System.out.println("here");
 
         @NotNull
         GoodsVo goods = goodsService.getGoodsVoByGoodsId(goodsId);
@@ -80,8 +79,6 @@ public class GoodsController {
             secondsKillStatus = 1;
             remianSeconds = 0;
         }
-        System.out.println("remainSeconds"+remianSeconds);
-        System.out.println("secondsKillStatus"+secondsKillStatus);
         model.addAttribute("secondsKillStatus", secondsKillStatus);
         model.addAttribute("remainSeconds", remianSeconds);
         return "goods_detail";
