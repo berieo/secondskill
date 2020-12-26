@@ -1,5 +1,6 @@
 package com.spring.secondskill.config;
 
+import com.spring.secondskill.domain.SecondsKillUser;
 import com.spring.secondskill.service.SecondsKillUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
@@ -28,7 +29,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
         Class<?> clazz = methodParameter.getParameterType();
-        return false;
+        return clazz == SecondsKillUser.class;
     }
 
     @Override
@@ -41,6 +42,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 
         String paramToken = httpServletRequest.getParameter(SecondsKillUserService.COOKIE_NAME_TOKEN);
         String cookieToken = getCookieValue(httpServletRequest, SecondsKillUserService.COOKIE_NAME_TOKEN);
+
         if(StringUtils.isEmpty(paramToken) && StringUtils.isEmpty(cookieToken)){
             return null;
         }
@@ -49,12 +51,15 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     private String getCookieValue(HttpServletRequest httpServletRequest, String cookieName){
+
         Cookie[] cookies = httpServletRequest.getCookies();
+
         for(Cookie cookie : cookies){
             if(cookie.getName().equals(cookieName)){
                 return cookie.getValue();
             }
         }
+
         return null;
     }
 }
