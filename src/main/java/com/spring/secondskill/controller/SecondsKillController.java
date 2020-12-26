@@ -66,7 +66,7 @@ public class SecondsKillController {
 
         //减库存 下订单 写入秒杀订单
         OrderInfo orderInfo = secondsKillService.secondsKill(secondsKillUser, goodsVo);
-        model.addAttribute("orderinfo", orderInfo);
+        model.addAttribute("orderInfo", orderInfo);
         model.addAttribute("goods", goodsVo);
         return "order_detail";
     }

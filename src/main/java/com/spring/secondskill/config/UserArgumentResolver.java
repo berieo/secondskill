@@ -26,12 +26,19 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     @Autowired
     SecondsKillUserService secondsKillUserService;
 
+    /*
+        重写方法判断是否为所需类
+     */
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
         Class<?> clazz = methodParameter.getParameterType();
         return clazz == SecondsKillUser.class;
     }
 
+    /*
+        重写resolveArgument方法
+        通过token返回SecondsKillUser
+     */
     @Override
     public Object resolveArgument(MethodParameter methodParameter, ModelAndViewContainer modelAndViewContainer,
                                   NativeWebRequest nativeWebRequest, WebDataBinderFactory webDataBinderFactory)
@@ -50,6 +57,9 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         return secondsKillUserService.getByToken(httpServletResponse, token);
     }
 
+    /*
+        从Request中获取cookie
+     */
     private String getCookieValue(HttpServletRequest httpServletRequest, String cookieName){
 
         Cookie[] cookies = httpServletRequest.getCookies();
