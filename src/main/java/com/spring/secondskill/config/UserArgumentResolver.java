@@ -1,5 +1,6 @@
 package com.spring.secondskill.config;
 
+import com.spring.secondskill.access.UserContext;
 import com.spring.secondskill.domain.SecondsKillUser;
 import com.spring.secondskill.service.SecondsKillUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,16 +61,20 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     /*
         从Request中获取cookie
      */
-    private String getCookieValue(HttpServletRequest httpServletRequest, String cookieName){
-
-        Cookie[] cookies = httpServletRequest.getCookies();
-
-        for(Cookie cookie : cookies){
-            if(cookie.getName().equals(cookieName)){
+    private String getCookieValue(HttpServletRequest request, String cookiName) {
+        Cookie[]  cookies = request.getCookies();
+        if(cookies == null || cookies.length <= 0){
+            return null;
+        }
+        for(Cookie cookie : cookies) {
+            if(cookie.getName().equals(cookiName)) {
                 return cookie.getValue();
             }
         }
-
         return null;
     }
+//    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+//                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+//        return UserContext.getUser();
+//    }
 }
