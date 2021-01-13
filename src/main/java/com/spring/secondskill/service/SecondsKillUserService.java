@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 @Service
-public class SecondsKillUserService implements SecondsKillDao {
+public class SecondsKillUserService {
 
     public static final String COOKIE_NAME_TOKEN = "token";
 
@@ -29,9 +29,39 @@ public class SecondsKillUserService implements SecondsKillDao {
     @Autowired
     RedisService redisService;
 
-    @Override
+
     public SecondsKillUser getById(long id) {
-        return secondskillDao.getById(id);
+        //对象缓存, 取缓存
+        SecondsKillUser secondsKillUser = redisService.get(SecondsKillUserKey.getById,""+id,SecondsKillUser.class);
+        if(secondsKillUser != null){
+            return secondsKillUser;
+        }
+        //取数据库
+        secondsKillUser = secondskillDao.getById(id);
+        if(secondsKillUser != null){
+            redisService.set(SecondsKillUserKey.getById,""+id, secondsKillUser);
+        }
+        return secondsKillUser;
+    }
+
+    public boolean updatePassword(String token, long id, String formPass){
+        //取user
+        SecondsKillUser secondsKillUser = getById(id);
+        if(secondsKillUser == null){
+            throw new GlobalException(CodeMsg.MOBILE_NOT_EXIST);
+        }
+        //新建一个user，不使用前面的user，修改哪个字段更新哪个字段
+        SecondsKillUser toBeUpdate = new SecondsKillUser();
+        //更新数据库
+        toBeUpdate.setId(id);
+        toBeUpdate.setPassword(MD5Util.formPassToDBPass(formPass, secondsKillUser.getSalt()));
+        secondskillDao.update(toBeUpdate);
+        //更新缓存
+        redisService.delete(SecondsKillUserKey.getById, ""+id);
+        secondsKillUser.setPassword(toBeUpdate.getPassword());
+        redisService.set(SecondsKillUserKey.token, token, secondsKillUser);
+        return true;
+
     }
 
     public SecondsKillUser getByToken(HttpServletResponse httpServletResponse, String token) {
@@ -46,7 +76,7 @@ public class SecondsKillUserService implements SecondsKillDao {
         return secondsKillUser;
     }
 
-    public  boolean login(HttpServletResponse httpServletResponse, LoginVo loginVo){
+    public String login(HttpServletResponse httpServletResponse, LoginVo loginVo){
         if(loginVo == null){
             throw new GlobalException(CodeMsg.SERVER_ERROR);
         }
@@ -68,7 +98,7 @@ public class SecondsKillUserService implements SecondsKillDao {
         }
         String token = UUIDUtil.uuid();
         addCookie(httpServletResponse, token, secondsKillUser);
-        return true;
+        return token;
     }
 
     private void addCookie(HttpServletResponse httpServletResponse,String token, SecondsKillUser secondsKillUser){

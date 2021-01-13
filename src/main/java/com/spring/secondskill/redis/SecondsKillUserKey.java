@@ -9,7 +9,7 @@ public class SecondsKillUserKey extends BasePrefix {
      */
     public static SecondsKillUserKey token = new SecondsKillUserKey(TOKEN_EXPIRE,"tk");
     public static SecondsKillUserKey getByName = new SecondsKillUserKey("name");
-
+    public static SecondsKillUserKey getById = new SecondsKillUserKey(0,"id");
     public SecondsKillUserKey(int expireSeconds, String prefix) {
         super(expireSeconds, prefix);
     }

@@ -1,18 +1,29 @@
 package com.spring.secondskill.controller;
 
+import com.spring.secondskill.domain.Goods;
 import com.spring.secondskill.domain.SecondsKillUser;
+import com.spring.secondskill.redis.GoodsKey;
 import com.spring.secondskill.redis.RedisService;
 import com.spring.secondskill.service.GoodsService;
 import com.spring.secondskill.service.SecondsKillUserService;
 import com.spring.secondskill.service.UserService;
 import com.spring.secondskill.vo.GoodsVo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.Thymeleaf;
+import org.thymeleaf.context.IWebContext;
+import org.thymeleaf.context.WebContext;
+import org.thymeleaf.spring5.view.ThymeleafViewResolver;
+import org.thymeleaf.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -34,25 +45,48 @@ public class GoodsController {
     @Autowired
     SecondsKillUserService secondsKillUserService;
 
-    @RequestMapping("/to_list")
-    public String toLogin(Model model, SecondsKillUser secondsKillUser){
+    @Autowired
+    ThymeleafViewResolver thymeleafViewResolver;
+
+    @Autowired
+    ApplicationContext applicationContext;
+
+    @RequestMapping(value = "/to_list", produces = "text/html")
+    @ResponseBody
+    public String list(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Model model, SecondsKillUser secondsKillUser){
         model.addAttribute("user", secondsKillUser);
-        //查询商品列表
+        //取缓存
+        String html = redisService.get(GoodsKey.getGoodsList, "", String.class);
+        System.out.println(html);
+        if(!StringUtils.isEmpty(html)) {
+            return html;
+        }
         List<GoodsVo> goodsList = goodsService.listGoodsVo();
-        /*
-            goodList需要与前端保持一致
-         */
         model.addAttribute("goodsList", goodsList);
-        return "goods_list";
+        //return "goods_list";
+        WebContext ctx  = new WebContext(httpServletRequest, httpServletResponse, httpServletRequest.getServletContext(),
+                httpServletRequest.getLocale(), model.asMap());
+        //缓存中没有数据的时候手动渲染
+        html = thymeleafViewResolver.getTemplateEngine().process("goods_list", ctx);
+        if(!StringUtils.isEmpty(html)) {
+            redisService.set(GoodsKey.getGoodsList, "", html);
+        }
+        return html;
     }
 
     /*
         URL变量可以用{}动态指定
      */
-    @RequestMapping("/to_detail/{goodsId}")
-    public String toDetail(Model model, SecondsKillUser secondsKillUser, @PathVariable("goodsId")long goodsId){
+    @RequestMapping(value = "/to_detail/{goodsId}", produces = "text/html")
+    @ResponseBody
+    public String toDetail(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Model model, SecondsKillUser secondsKillUser, @PathVariable("goodsId")long goodsId){
         model.addAttribute("user", secondsKillUser);
 
+        //取URL缓存,不同URL有不同缓存
+        String html = redisService.get(GoodsKey.getGoodsDetail, "", String.class);
+        if(!StringUtils.isEmpty(html)){
+            return html;
+        }
         @NotNull
         GoodsVo goods = goodsService.getGoodsVoByGoodsId(goodsId);
         model.addAttribute("goods", goods);
@@ -78,7 +112,16 @@ public class GoodsController {
         }
         model.addAttribute("secondsKillStatus", secondsKillStatus);
         model.addAttribute("remainSeconds", remianSeconds);
-        return "goods_detail";
+
+        //return "goods_detail";
+        //缓存中没有数据的时候手动渲染
+        WebContext ctx  = new WebContext(httpServletRequest, httpServletResponse, httpServletRequest.getServletContext(),
+                httpServletRequest.getLocale(), model.asMap());
+        html = thymeleafViewResolver.getTemplateEngine().process("goods_detail", ctx);
+        if(!StringUtils.isEmpty(html)) {
+            redisService.set(GoodsKey.getGoodsDetail, "", html);
+        }
+        return html;
     }
 
 }

@@ -44,12 +44,12 @@ public class LoginController {
      */
     @RequestMapping("/do_login")
     @ResponseBody
-    public Result<Boolean> doLogin(HttpServletResponse httpServletResponse, @Valid LoginVo loginVo){
+    public Result<String> doLogin(HttpServletResponse httpServletResponse, @Valid LoginVo loginVo){
         log.info(loginVo.toString());
         /*
             登录
          */
-        secondsKillUserService.login(httpServletResponse, loginVo);
-        return Result.success(true);
+        String token = secondsKillUserService.login(httpServletResponse, loginVo);
+        return Result.success(token);
     }
 }

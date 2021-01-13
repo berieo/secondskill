@@ -99,6 +99,18 @@ public class RedisService {
         }
     }
 
+    public boolean delete(KeyPrefix keyPrefix, String key){
+        Jedis jedis = null;
+        try{
+            jedis = jedisPool.getResource();
+            String realKey = keyPrefix.getPrefix() + key;
+            long ret = jedis.del(realKey);
+            return ret > 0;
+        }finally {
+            returnToPool(jedis);
+        }
+    }
+
     private <T> String beanToString(T value) {
         if(value == null){
             return null;

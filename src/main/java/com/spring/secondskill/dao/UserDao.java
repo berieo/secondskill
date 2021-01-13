@@ -1,10 +1,8 @@
 package com.spring.secondskill.dao;
 
+import com.spring.secondskill.domain.SecondsKillUser;
 import com.spring.secondskill.domain.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 @Mapper
 public interface UserDao {
@@ -14,4 +12,7 @@ public interface UserDao {
 
     @Insert("insert into user(id, name)values(#{id}, #{name})")
     public int insert(User user);
+
+
+
 }
