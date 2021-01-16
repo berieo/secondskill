@@ -1,6 +1,8 @@
 package com.spring.secondskill.controller;
 
 import com.spring.secondskill.domain.User;
+import com.spring.secondskill.rabbitmq.MQReceiver;
+import com.spring.secondskill.rabbitmq.MQSender;
 import com.spring.secondskill.redis.RedisService;
 import com.spring.secondskill.redis.UserKey;
 import com.spring.secondskill.result.CodeMsg;
@@ -22,6 +24,16 @@ public class SampleController {
 
     @Autowired
     RedisService redisService;
+
+    @Autowired
+    MQSender mqSender;
+
+    @RequestMapping("/mq")
+    @ResponseBody
+    public Result<String> mq() {
+		mqSender.send("hello");
+        return Result.success("Hello，world");
+    }
 
     @RequestMapping("/thymeleaf")
     public String thymeleaf(Model model){
