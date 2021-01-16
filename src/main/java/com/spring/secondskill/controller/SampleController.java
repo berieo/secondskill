@@ -35,6 +35,28 @@ public class SampleController {
         return Result.success("Hello，world");
     }
 
+    @RequestMapping("/mq/topic")
+    @ResponseBody
+    public Result<String> topic() {
+        mqSender.sendTopic("topic");
+        return Result.success("Hello，world");
+    }
+
+    @RequestMapping("/mq/fanout")
+    @ResponseBody
+    public Result<String> fanout() {
+		mqSender.sendFanout("fanout");
+        return Result.success("Hello，world");
+    }
+
+
+    @RequestMapping("/mq/header")
+    @ResponseBody
+    public Result<String> header() {
+        mqSender.sendFanout("fanout");
+        return Result.success("Hello，world");
+    }
+
     @RequestMapping("/thymeleaf")
     public String thymeleaf(Model model){
         /*

@@ -55,6 +55,7 @@ public class MQConfig {
     public Binding topicBinding2() {
         return BindingBuilder.bind(topicQueue2()).to(topicExchage()).with("topic.#");
     }
+
     /**
      * Fanout模式 交换机Exchange
      * */
@@ -70,6 +71,7 @@ public class MQConfig {
     public Binding FanoutBinding2() {
         return BindingBuilder.bind(topicQueue2()).to(fanoutExchage());
     }
+
     /**
      * Header模式 交换机Exchange
      * */
@@ -88,6 +90,4 @@ public class MQConfig {
         map.put("header2", "value2");
         return BindingBuilder.bind(headerQueue1()).to(headersExchage()).whereAll(map).match();
     }
-
-
 }
